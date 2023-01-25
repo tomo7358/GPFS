@@ -5,7 +5,7 @@ import random
 import pandas as pd
 import SMBH
 
-app = Flask(__name__,template_folder='/home/kronos/GPFS/Templates')
+app = Flask(__name__,template_folder='/home/kronos/GPFS-1/Templates')
 
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
@@ -22,14 +22,14 @@ def upload():
         # and the os.path.join() function to join the directory and filename
         filename = str(random.randint(1000000000,9999999999))
         print(filename)
-        file.save(os.path.join("/home/kronos/GPFS/tmp", filename+'.pdf'))
+        file.save(os.path.join("/home/kronos/GPFS-1/tmp", filename+'.pdf'))
         # use your module to convert the pdf to a dataframe
         return "File uploaded successfully"
     return render_template('Upload.html', form=form)
 
 
 
-if __name__ == 'main':
-    app.run(debug=True)
+
+app.run(debug=True)
               
 
