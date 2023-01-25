@@ -1,0 +1,15 @@
+<form method="POST" action="{{url_for('identify_unit')}}">
+    {% for task in form.tasks %}
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="{{ task.name }}" id="grade_{{ task.name }}" value="grade">
+        <label class="form-check-label" for="grade_{{ task.name }}">Grade</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="{{ task.name }}" id="unit_{{ task.name }}" value="unit">
+        <label class="form-check-label" for="unit_{{ task.name }}">Unit</label>
+    </div>
+    {{ task }}
+    <br>
+    {% endfor %}
+    <input type="submit" value="Submit">
+</form>
