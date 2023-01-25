@@ -25,7 +25,7 @@ class TaskForm(Form):
 
 @app.route('/upload', methods=['GET', 'POST'])
 
-
+#Identify the unit or grade group
 def identify_unit(marks):
         df=marks.data()
         form = TaskForm()
@@ -47,8 +47,7 @@ def identify_unit(marks):
                     return str(df)
         return render_template('identify_unit.html', form=form)
 
-
-
+#upload file function
 def upload():
     form = FileForm()
     if request.method == 'POST':
@@ -59,11 +58,6 @@ def upload():
         marks.extract_tables()
         return redirect(url_for('identify_unit'),marks=marks )
     return render_template('Upload.html', form=form)
-
-
-
-
-
 
 app.run(debug=True)
               
