@@ -26,10 +26,7 @@ class TaskForm(Form):
 @app.route('/upload', methods=['GET', 'POST'])
 
 
-def identify_unit():
-
-        marks = SMBH.Markbook()
-        marks.extract_tables(session['full_path'])
+def identify_unit(marks):
         df=marks.data()
         form = TaskForm()
         form.tasks.choices = [(task, task) for task in df["Task"]]
@@ -58,9 +55,9 @@ def upload():
         file = request.files['file']
         filename = str(random.randint(1000000000,9999999999))
         file.save(os.path.join("/home/kronos/GPFS-1/tmp", filename+'.pdf'))
-        session['full_path'] = os.path.join("/home/kronos/GPFS-1/tmp", filename+'.pdf')
-        
-        return redirect(url_for('identify_unit'))
+        marks = SMBH.Markbook(file)
+        marks.extract_tables()
+        return redirect(url_for('identify_unit'),marks=marks )
     return render_template('Upload.html', form=form)
 
 
