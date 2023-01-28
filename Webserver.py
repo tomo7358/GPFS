@@ -44,11 +44,39 @@ def index():
 
 #upload function
 @app.route('/upload', methods=['GET', 'POST'])
+<<<<<<< HEAD
+=======
+
+#Identify the unit or grade group
+def identify_unit(marks):
+        df=marks.data()
+        form = TaskForm()
+        form.tasks.choices = [(task, task) for task in df["Task"]]
+        if request.method == 'POST':
+            selected_tasks = request.form.getlist('tasks')
+            grade_categories = [task for task in selected_tasks if request.form.get(task) == 'grade']
+            unit_categories = [task for task in selected_tasks if request.form.get(task) == 'unit']
+            for index, row in df.iterrows():
+                task = row["Task"]
+                if task in grade_categories:
+                    current_unit = None
+                elif task in unit_categories:
+                    current_unit = task
+                    current_grade_group = None
+                    df.at[index, "Unit"] = current_unit
+                    df.at[index, "Grade Group"] = current_grade_group
+                    df["Grade Group"] = df["Grade Group"].fillna(method='ffill')
+                    return str(df)
+        return render_template('identify_unit.html', form=form)
+
+#upload file function
+>>>>>>> ace9bb84eb3e68ab7a6c84e660febcce8442149f
 def upload():
     form = FileForm()
     if request.method == 'POST':
         file = request.files['file']
         filename = str(random.randint(1000000000,9999999999))
+<<<<<<< HEAD
         file.save(os.path.join(tmp_folder, filename+'.pdf'))
         
         return redirect(url_for('identify_unit', filename=filename))
@@ -163,6 +191,14 @@ def identify_nhi(id):
 
 
 
+=======
+        file.save(os.path.join("/home/kronos/GPFS-1/tmp", filename+'.pdf'))
+        marks = SMBH.Markbook(file)
+        marks.extract_tables()
+        return redirect(url_for('identify_unit'),marks=marks )
+    return render_template('Upload.html', form=form)
+
+>>>>>>> ace9bb84eb3e68ab7a6c84e660febcce8442149f
 app.run(debug=True)
               
 
