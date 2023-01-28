@@ -1,6 +1,6 @@
 #import libraries for flask
-from flask import Flask, render_template, request,g,redirect,url_for,session
-from wtforms import Form, FileField, validators
+from flask import Flask, render_template, request,redirect,url_for
+from wtforms import Form, FileField, validators, SubmitField
 from wtforms import SelectMultipleField
 
 #import additional libraries for pdf parsing and markbook processing
@@ -36,6 +36,10 @@ class TaskForm(Form):
 class NHITaskForm(Form):
     tasks = SelectMultipleField('Tasks')
 
+class EditMarksForm(Form):
+    regenerate_marks = SubmitField("Regenerate Marks")
+    reset = SubmitField("Reset")
+
 # homepage where user can upload a pdf
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -44,39 +48,11 @@ def index():
 
 #upload function
 @app.route('/upload', methods=['GET', 'POST'])
-<<<<<<< HEAD
-=======
-
-#Identify the unit or grade group
-def identify_unit(marks):
-        df=marks.data()
-        form = TaskForm()
-        form.tasks.choices = [(task, task) for task in df["Task"]]
-        if request.method == 'POST':
-            selected_tasks = request.form.getlist('tasks')
-            grade_categories = [task for task in selected_tasks if request.form.get(task) == 'grade']
-            unit_categories = [task for task in selected_tasks if request.form.get(task) == 'unit']
-            for index, row in df.iterrows():
-                task = row["Task"]
-                if task in grade_categories:
-                    current_unit = None
-                elif task in unit_categories:
-                    current_unit = task
-                    current_grade_group = None
-                    df.at[index, "Unit"] = current_unit
-                    df.at[index, "Grade Group"] = current_grade_group
-                    df["Grade Group"] = df["Grade Group"].fillna(method='ffill')
-                    return str(df)
-        return render_template('identify_unit.html', form=form)
-
-#upload file function
->>>>>>> ace9bb84eb3e68ab7a6c84e660febcce8442149f
 def upload():
     form = FileForm()
     if request.method == 'POST':
         file = request.files['file']
         filename = str(random.randint(1000000000,9999999999))
-<<<<<<< HEAD
         file.save(os.path.join(tmp_folder, filename+'.pdf'))
         
         return redirect(url_for('identify_unit', filename=filename))
@@ -84,6 +60,7 @@ def upload():
 #page that allows user to select which tasks are grade categories and which are unit categories
 @app.route('/identify_unit/<filename>', methods=['GET', 'POST'])
 def identify_unit(filename):
+    filename=filename
     # Create the full path to the pdf file
     full_path = os.path.join(tmp_folder, filename+'.pdf')
     # Create a new markbook object
@@ -133,8 +110,8 @@ def identify_unit(filename):
         # Calculate the marks for each task
         marks.calculate_marks()
         marks.df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
-        # Redirect to the homepage
-        return redirect(url_for("identify_nhi", id=filename))
+        # Redirect to the page for identifying the NHI's
+        return redirect(url_for('identify_nhi', filename=filename))
     # Get the unique tasks from the dataframe
     tasks = df['Task'].unique()
     # Create a new form for selecting tasks
@@ -147,58 +124,63 @@ def identify_unit(filename):
 
 
 
-@app.route('/identify_nhi<id>', methods=['GET', 'POST'])
-def identify_nhi(id):
-    df=pd.read_csv(tmp_folder + '/' + id + '.csv')
+@app.route('/identify_nhi/<filename>', methods=['GET', 'POST'])
+def identify_nhi(filename):
+    df=pd.read_csv(tmp_folder + '/' + filename + '.csv')
     # Create a new markbook object
     marks=SMBH.Markbook()
     #add dataframe to markbook object
     marks.df=df
     # Create a form for selecting tasks
-    form = NHITaskForm()
-    marks = request.args.get(marks)
     nhi_list = []
+    form = NHITaskForm()
     if request.method == 'POST':
+       
         # Get the selected tasks from the form
         for task in form.tasks:
             task_name = task.label.text
             if request.form.get(task_name):
                 nhi_list.append(task_name)
-
-        # create a new column in the dataframe to store the calculated marks
-        df["Calculated Mark"] = 0
-        # Iterate through the rows of the dataframe
+        # Iterate through the rows of the dataframe and replace if task has a NaN in the calculated mark column and is not in the nhi list than replace the NaN with a PASS
         for index, row in df.iterrows():
-            # Check if the mark is NaN
-            if pd.isnull(row["Mark"]):
-                # Check if the task is in the list of NHI's
-                if row["Task"] in nhi_list:
-                    df.at[index, "Mark"] = 0
-                    df.at[index, "Calculated Mark"] = "NHI"
-                else:
-                    df.at[index, "Calculated Mark"] = "PASS"
+            if pd.isnull(row["Calculated Mark"]) and row["Task"] not in nhi_list:
+                df.at[index, "Calculated Mark"] = "PASS"
+            elif pd.isnull(row["Calculated Mark"]) and row["Task"] in nhi_list:
+                df.at[index, "Calculated Mark"] = "0"
+            else:
+                pass
         # Update the markbook object with the updated dataframe
-        marks.df = df
-        # Redirect to the homepage
+        marks.df=df
+        print(marks.data())
+        #calculate the final mark
+        df,final_mark=marks.calculate_markbook()
+        return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
+
         return redirect("/")
     # Get the tasks with NaN in the calculated marks column
     tasks_with_nan = df[pd.isnull(df["Calculated Mark"])]["Task"].unique()
     form.tasks.choices = [(task, task) for task in tasks_with_nan]
+    
     # Render the template for identifying the NHI
-    return render_template('IsNHI.html', form=form)
+    return render_template('identify_nhi.html', form=form, df=df)
+
+
+@app.route('/edit_marks<filename>/<final_mark>', methods=['GET', 'POST'])
+def edit_marks(filename,final_mark):
+    df=pd.read_csv(os.path.join(tmp_folder, filename + '.csv'))
+    if request.method == 'POST':
+        for index, row in df.iterrows():
+            task = row["Task"]
+            calculated_mark = request.form[task]
+            df.at[index, "Calculated Mark"] = calculated_mark
+        df.to_csv(os.path.join(tmp_folder, filename + '.csv'), index=False)
+        return redirect(url_for("index"))
+    else:
+        return render_template('edit_marks.html', df=df, final_mark=final_mark)
 
 
 
 
-
-=======
-        file.save(os.path.join("/home/kronos/GPFS-1/tmp", filename+'.pdf'))
-        marks = SMBH.Markbook(file)
-        marks.extract_tables()
-        return redirect(url_for('identify_unit'),marks=marks )
-    return render_template('Upload.html', form=form)
-
->>>>>>> ace9bb84eb3e68ab7a6c84e660febcce8442149f
 app.run(debug=True)
               
 

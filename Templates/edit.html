@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Marks</title>
+    <style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #333;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #ddd;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    form {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .primary-color {
+        color: black;
+    }
+    .secondary-color {
+        color: darkblue;
+    }
+    .button {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    .button:hover {
+        background-color: #555;
+    }
+</style>
+</head>
+<body>
+    <h1>Final Mark: {{ final_mark }}</h1>
+    <form method="POST" action="{{url_for('edit_marks')}}">
+        <table id="marks-table">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Weight</th>
+                    <th>Calculated Mark</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in df.iterrows() %}
+                    <tr>
+                        <td>{{row["Task"]}}</td>
+                        <td>{{row["Weight"]}}</td>
+                        <td>
+                            <input type="text" name="{{row["Task"]}}" value="{{row["Calculated Mark"]}}">
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="Regenerate Marks">
+    <input type="reset" value="Reset">
+    </form>
+</body>
+</html>
