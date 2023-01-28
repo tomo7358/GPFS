@@ -218,7 +218,7 @@ class Markbook():
             #create a row at the bottom of the dataframe with the class mark
             print(weighted_avg)
         self.df=markbook
-        return markbook
+        return markbook, weighted_avg
 
         
     def Full_Calculation(self):

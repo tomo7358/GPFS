@@ -1,0 +1,10 @@
+<h3>Identify NHI's</h3>
+
+<form action="" method="POST">
+    <ul>
+        {% for task in form.tasks %}
+            <li><input type="checkbox" name="{{ task.label.text }}" value="{{ task.label.text }}">{{ task.label.text }}</li>
+        {% endfor %}
+    </ul>
+    <input type="submit" value="Submit">
+</form>
