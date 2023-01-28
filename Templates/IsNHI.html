@@ -1,0 +1,23 @@
+<form method="POST" action="{{url_for('identify_nhi')}}">
+    <table>
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>NHI</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in df.iterrows() %}
+                {% if row["Calculated Mark"] == "NHI" %}
+                    <tr>
+                        <td>{{row["Task"]}}</td>
+                        <td>
+                            <input type="checkbox" name="nhi_tasks" value="{{row["Task"]}}">
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <input type="submit" value="Submit">
+</form>
