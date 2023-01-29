@@ -2,7 +2,7 @@
 from flask import Flask, render_template, request,redirect,url_for
 from wtforms import Form, FileField, validators, SubmitField
 from wtforms import SelectMultipleField
-
+from flask_debugtoolbar import DebugToolbarExtension 
 #import additional libraries for pdf parsing and markbook processing
 import os
 import random
@@ -22,10 +22,10 @@ for f in os.listdir(dir):
 # configure the app
 
 #secret key for session
-app.config['SECRET_KEY'] = 'udOAg]!YzPC}=%WW}3"+K>E*[x7`XV&iGExmEDz>|4fbL$a51{J.VNQW7_9a4oO'
+app.config['SECRET_KEY'] = b'udOAg]!YzPC}=%WW}3"+K>E*[x7`XV&iGExmEDz>|4fbL$a51{J.VNQW7_9a4oO'
 # max file size set to 64MB
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
-
+toolbar = DebugToolbarExtension(app)
 #create forms for uploading files and selecting tasks
 class FileForm(Form):
     file = FileField('File')
@@ -151,12 +151,10 @@ def identify_nhi(filename):
                 pass
         # Update the markbook object with the updated dataframe
         marks.df=df
-        print(marks.data())
         #calculate the final mark
         df,final_mark=marks.calculate_markbook()
         return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
 
-        return redirect("/")
     # Get the tasks with NaN in the calculated marks column
     tasks_with_nan = df[pd.isnull(df["Calculated Mark"])]["Task"].unique()
     form.tasks.choices = [(task, task) for task in tasks_with_nan]
@@ -164,23 +162,54 @@ def identify_nhi(filename):
     # Render the template for identifying the NHI
     return render_template('identify_nhi.html', form=form, df=df)
 
-
-@app.route('/edit_marks<filename>/<final_mark>', methods=['GET', 'POST'])
+@app.route('/edit_marks/<filename>/<final_mark>', methods=['GET', 'POST'])
 def edit_marks(filename,final_mark):
-    df=pd.read_csv(os.path.join(tmp_folder, filename + '.csv'))
+    df=pd.read_csv(tmp_folder + '/' + filename + '.csv')
+    # Save a copy of the original dataframe in case the user resets the form
+    if not os.path.exists(tmp_folder + '/' + filename +'-o'+ '.csv'):
+        df.to_csv(tmp_folder + '/' + filename +'-o'+ '.csv', index=False)
+    # Create a new markbook object
+    marks=SMBH.Markbook()
+    #add dataframe to markbook object
+    marks.df=df
     if request.method == 'POST':
+        print("Submitted")
+        # Update the calculated mark for each task based on user input
         for index, row in df.iterrows():
             task = row["Task"]
             calculated_mark = request.form[task]
+            print(calculated_mark)
             df.at[index, "Calculated Mark"] = calculated_mark
-        df.to_csv(os.path.join(tmp_folder, filename + '.csv'), index=False)
-        return redirect(url_for("index"))
-    else:
-        return render_template('edit_marks.html', df=df, final_mark=final_mark)
+
+        # Update the markbook object with the updated dataframe
+        marks.df=df
+        print("Updated dataframe")
+        print(df)
+        df,final_mark=marks.calculate_markbook()
+
+        print("Calculated final mark")
+        # Save the updated dataframe to the CSV file
+        df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
+        # Redirect to the page for editing the marks
+        return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
+    # Render the template with the current dataframe and final mark
+    return render_template("edit.html", df=df, final_mark=final_mark)
+
+@app.route('/reset_marks/<filename>/<final_mark>', methods=['POST'])
+def reset_marks(filename,final_mark):
+    # Reload the original dataframe from the CSV file
+    df=pd.read_csv(tmp_folder + '/' + filename +'-o'+ '.csv')
+    # Save the original dataframe to the CSV file
+    df.to_csv(filename, index=False)
+    # Render the template with the original dataframe and final mark
+    return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
+
+@app.route('/delete_data/<filename>', methods=['POST'])
+def delete_data(filename):
+    # code to delete the data
+    return redirect(url_for("/"))
 
 
-
-
-app.run(debug=True)
+app.run(debug=True,use_reloader=True)
               
 

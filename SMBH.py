@@ -117,6 +117,7 @@ class Markbook():
         #if the task is a grade category or unit set the calculated mark to NaN
         markbook["Calculated Mark"] = markbook.apply(lambda row: np.nan if row["Task"] in grade_categories or row["Task"] in unit_categories else row["Calculated Mark"], axis=1)
         #for loop that iterates through each grade group and unit
+        print(markbook["Grade Group"].unique())
         for grade_group in markbook["Grade Group"].unique():
             current_grade = []
             current_weight = []
@@ -133,8 +134,9 @@ class Markbook():
                         #append tasks calculated mark to list
                     #if the task is not a grade category or unit, append the calculated mark to the list aslong as it is not an PASS
                     if markbook[(markbook["Task"] == task) & (markbook["Unit"] == unit)]["Calculated Mark"].values[0] != "PASS":
-                        current_grade.append(int(markbook[(markbook["Task"] == task) & (markbook["Unit"] == unit)]["Calculated Mark"].values[0]))
-                        current_weight.append(int(markbook[(markbook["Task"] == task) & (markbook["Unit"] == unit)]["Weight"].values[0]))     
+                        print(unit)
+                        current_grade.append(float(markbook[(markbook["Task"] == task) & (markbook["Unit"] == unit)]["Calculated Mark"].values[0]))
+                        current_weight.append(float(markbook[(markbook["Task"] == task) & (markbook["Unit"] == unit)]["Weight"].values[0]))     
                 #if the list is not empty, calculate the weighted average
                 if current_grade != [] and current_weight != []:
                     #calculate the grade for the unit using this function sum(mark * weight for mark, weight in zip(marks, weights)) / sum(weights)
@@ -184,9 +186,7 @@ class Markbook():
                         if task in grade_categories:
                             markbook.loc[(markbook["Task"] == task) & (markbook["Grade Group"] == grade_group), "Calculated Mark"] = weighted_avg
                             break
-                #take marks and weights from each grade group and calculate the weighted average for the whole class
-                
-            
+        
             #if the list is not empty, calculate the weighted average of the whole class
             else:
                 #get each unit in dataframe
@@ -196,11 +196,10 @@ class Markbook():
                         #check to see if unit has a calculated mark of PASS or NaN
                         if markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0] != "PASS" and pd.isnull(markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0]) == False:
                             #append the weight and calculated mark to the list
-                            current_weight.append(int(markbook[(markbook["Unit"] == unit)]["Weight"].values[0]))
-                            current_grade.append(int(markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0])) 
+                            current_weight.append(float(markbook[(markbook["Unit"] == unit)]["Weight"].values[0]))
+                            current_grade.append(float(markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0])) 
                 #calculate avg for class
                 weighted_avg = round(sum(grade * weight for grade, weight in zip(current_grade, current_weight)) / sum(current_weight),2)
-                print(weighted_avg)
         current_grade=[]
         current_weight=[]
         if grade_categories != []:
@@ -209,27 +208,14 @@ class Markbook():
                 #get the calculated mark and weight for each grade category where the grade catagoery is the 1st item with the grade group name and the mark and weight are not NaN or None
                 for mark, weight in zip(markbook[(markbook["Grade Group"] == group) & (markbook["Task"] == group)]["Calculated Mark"].values, markbook[(markbook["Grade Group"] == group) & (markbook["Task"] == group)]["Weight"].values):
                     if mark != "PASS" and pd.isnull(mark) == False:
-                        current_grade.append(int(mark))
-                        current_weight.append(int(weight))
+                        current_grade.append(float(mark))
+                        current_weight.append(float(weight))
             #calculate avg for the whole class
             weighted_avg = round(sum(grade * weight for grade, weight in zip(current_grade, current_weight)) / sum(current_weight),2)
-            
 
-            #create a row at the bottom of the dataframe with the class mark
-            print(weighted_avg)
+
         self.df=markbook
         return markbook, weighted_avg
 
-        
-    def Full_Calculation(self):
-        out=self.select_file_windows_explorer()
-        if out=="failed":
-            sys.exit
-        else:
-            self.extract_tables()
-            self.identify_unit()
-            self.identify_nhi()
-            self.calculate_marks()
-        return(self.df)
     def data(self):
         return(self.df)
