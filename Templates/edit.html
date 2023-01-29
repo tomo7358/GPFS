@@ -57,6 +57,12 @@
     }
        @import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap');
 
+  form {
+    width: 500px; /* Set the width here */
+    margin: 0 auto; /* Center the form */
+  }
+
+
 .confirm {
     position: fixed;
     top: 0;
@@ -203,7 +209,7 @@
                         <td>{{row["Task"]}}</td>
                         <td>{{row["Weight"]}}</td>
                         <td>
-                            <input type="text" name="{{row["Task"]}}" value="{{row["Calculated Mark"]}}">
+                            <input type="text" name="{{row["Unit"]}}-{{row["Task"]}}" value="{{row["Calculated Mark"]}}">
                         </td>
                     </tr>
                 {% endfor %}
@@ -211,7 +217,7 @@
         </table>
         <div>
         <input type="submit" value="Regenerate" class="button">
-        <input type="reset" value="Reset" class="button" onClick="location.href='{{url_for('reset_marks',filename=filename,final_mark=final_mark)}}'">
+        <input type="submit" value="Reset" name="Reset" class="button">
         <button id="btnChangeBg" class="button" type="button">delete data</button>
        </div>
    </form>

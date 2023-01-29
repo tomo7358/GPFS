@@ -8,6 +8,7 @@ import os
 import random
 import pandas as pd
 import SMBH
+import numpy as np
 
 #define tmp foler path
 tmp_folder = '/home/kronos/GPFS-1/tmp'
@@ -38,7 +39,6 @@ class NHITaskForm(Form):
 
 class EditMarksForm(Form):
     regenerate_marks = SubmitField("Regenerate Marks")
-    reset = SubmitField("Reset")
 
 # homepage where user can upload a pdf
 @app.route('/', methods=['GET', 'POST'])
@@ -153,6 +153,7 @@ def identify_nhi(filename):
         marks.df=df
         #calculate the final mark
         df,final_mark=marks.calculate_markbook()
+        df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
         return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
 
     # Get the tasks with NaN in the calculated marks column
@@ -168,41 +169,43 @@ def edit_marks(filename,final_mark):
     # Save a copy of the original dataframe in case the user resets the form
     if not os.path.exists(tmp_folder + '/' + filename +'-o'+ '.csv'):
         df.to_csv(tmp_folder + '/' + filename +'-o'+ '.csv', index=False)
+
     # Create a new markbook object
     marks=SMBH.Markbook()
     #add dataframe to markbook object
     marks.df=df
+    # Calculate the marks and final grade for markbook
+    df,final_mark=marks.calculate_markbook()
     if request.method == 'POST':
-        print("Submitted")
-        # Update the calculated mark for each task based on user input
-        for index, row in df.iterrows():
-            task = row["Task"]
-            calculated_mark = request.form[task]
-            print(calculated_mark)
-            df.at[index, "Calculated Mark"] = calculated_mark
+        if 'Reset' in request.form:
+            print("Resetting form")
+            # Reload the original dataframe from the CSV file
+            df=pd.read_csv(tmp_folder + '/' + filename +'-o'+ '.csv')
+            # Save the original dataframe to the CSV file
+            df.to_csv(tmp_folder + '/' + filename +'.csv', index=False)
+            # Render the template with the original dataframe and final mark
+            return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
+        else:
+            for index, row in df.iterrows():
+                task = row["Task"]
+                unit = row["Unit"]
+                calculated_mark = request.form[unit + '-' + task]
+                print(task, calculated_mark)
+                df.at[index, "Calculated Mark"] = calculated_mark
+            print(df)
+            # Update the markbook object with the updated dataframe
+            marks.df=df
+            print("Updated dataframe")
+            df,final_mark=marks.calculate_markbook()
+            
+            # Save the updated dataframe to the CSV file
+            df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
+            # Redirect to the page for editing the marks
+            return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
+        # Render the template with the current dataframe and final mark
 
-        # Update the markbook object with the updated dataframe
-        marks.df=df
-        print("Updated dataframe")
-        print(df)
-        df,final_mark=marks.calculate_markbook()
-
-        print("Calculated final mark")
-        # Save the updated dataframe to the CSV file
-        df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
-        # Redirect to the page for editing the marks
-        return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
-    # Render the template with the current dataframe and final mark
     return render_template("edit.html", df=df, final_mark=final_mark)
 
-@app.route('/reset_marks/<filename>/<final_mark>', methods=['POST'])
-def reset_marks(filename,final_mark):
-    # Reload the original dataframe from the CSV file
-    df=pd.read_csv(tmp_folder + '/' + filename +'-o'+ '.csv')
-    # Save the original dataframe to the CSV file
-    df.to_csv(filename, index=False)
-    # Render the template with the original dataframe and final mark
-    return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
 
 @app.route('/delete_data/<filename>', methods=['POST'])
 def delete_data(filename):

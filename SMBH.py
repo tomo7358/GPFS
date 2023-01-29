@@ -98,6 +98,7 @@ class Markbook():
         weighted_avg=None
         current_grade=[]
         current_weight = []
+
         #function that finds the grade group and unit for each task
         def identify_root_task(markbook):
             #find the first occurence of each grade group and unit and add them to a list
@@ -112,12 +113,22 @@ class Markbook():
                 elif task in markbook["Unit"].unique():
                     unit_categories.append(task)     
             return (grade_categories, unit_categories)
+        #function that checks if a task has been repeated and is a unit or grade category
+        def check_repeat(markbook,grade_categories,unit_categories):
+            #loop through each task
+            for task in markbook["Task"].unique():
+                #check if the task is a grade category or unit
+                if task in grade_categories or task in unit_categories:
+                     if markbook[markbook["Task"] == task].shape[0] > 1:
+                        markbook.loc[markbook[markbook["Task"] == task].index[0], "Task"] = task + "."
+            return(markbook)
+
         #call the function to find the grade group and unit for each task
         grade_categories, unit_categories = identify_root_task(markbook)
+        check_repeat(markbook,grade_categories,unit_categories)
         #if the task is a grade category or unit set the calculated mark to NaN
         markbook["Calculated Mark"] = markbook.apply(lambda row: np.nan if row["Task"] in grade_categories or row["Task"] in unit_categories else row["Calculated Mark"], axis=1)
         #for loop that iterates through each grade group and unit
-        print(markbook["Grade Group"].unique())
         for grade_group in markbook["Grade Group"].unique():
             current_grade = []
             current_weight = []
@@ -129,12 +140,10 @@ class Markbook():
                     #check if the task is a grade category or unit
                     if task in grade_categories or task in unit_categories:
                         continue
-                    if task =='Class':
-                        continue
-                        #append tasks calculated mark to list
+
+                    #append tasks calculated mark to list
                     #if the task is not a grade category or unit, append the calculated mark to the list aslong as it is not an PASS
                     if markbook[(markbook["Task"] == task) & (markbook["Unit"] == unit)]["Calculated Mark"].values[0] != "PASS":
-                        print(unit)
                         current_grade.append(float(markbook[(markbook["Task"] == task) & (markbook["Unit"] == unit)]["Calculated Mark"].values[0]))
                         current_weight.append(float(markbook[(markbook["Task"] == task) & (markbook["Unit"] == unit)]["Weight"].values[0]))     
                 #if the list is not empty, calculate the weighted average

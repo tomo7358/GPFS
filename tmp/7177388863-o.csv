@@ -1,7 +1,7 @@
 Task,Weight,Date,Unit,Grade Group,Calculated Mark
-Science 10 Chemistry Review ,0,9/15/2022,Science 10 Chemistry Review ,,89.0
+Science 10 Chemistry Review ,0,9/15/2022,Science 10 Chemistry Review ,,
 Gases Unit ,10,9/23/2022,Gases Unit ,,87.0
-Unit Open Note Assessment ,20,9/23/2022,Gases Unit ,,
+Unit Open Note Assessment ,20,9/23/2022,Gases Unit ,,PASS
 Lab Assessment ,20,9/27/2022,Gases Unit ,,75.0
 Unit Exam ,60,9/27/2022,Gases Unit ,,91.0
 Chemical Bonding ,10,10/6/2022,Chemical Bonding ,,84.39
@@ -20,9 +20,9 @@ Open Note Assessment ,15,12/4/2022,Stoichiometry ,,92.31
 Lab Assessment ,20,12/4/2022,Stoichiometry ,,95.45
 Unit Exam ,50,12/4/2022,Stoichiometry ,,88.95
 Acids and Bases ,15,12/13/2022,Acids and Bases ,,81.18
-CH. 6 Quiz ,15,12/13/2022,Acids and Bases ,,
+CH. 6 Quiz ,15,12/13/2022,Acids and Bases ,,PASS
 Open Note ,15,12/19/2022,Acids and Bases ,,66.67
 Lab Assessment ,20,12/19/2022,Acids and Bases ,,75.0
 Unit Exam ,50,12/19/2022,Acids and Bases ,,88.0
-Final Exam ,30,1/27/2023,Final Exam ,,86.0
+Final Exam .,30,1/27/2023,Final Exam ,,86.0
 Final Exam ,100,1/27/2023,Final Exam ,,86.0
