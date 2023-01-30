@@ -9,7 +9,8 @@ import random
 import pandas as pd
 import SMBH
 import numpy as np
-
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 #define tmp foler path
 tmp_folder = '/home/kronos/GPFS-1/tmp'
 #create app and set template folder
@@ -189,6 +190,7 @@ def edit_marks(filename,final_mark):
             for index, row in df.iterrows():
                 task = row["Task"]
                 unit = row["Unit"]
+                
                 calculated_mark = request.form[unit + '-' + task]
                 print(task, calculated_mark)
                 df.at[index, "Calculated Mark"] = calculated_mark
