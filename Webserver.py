@@ -17,10 +17,10 @@ tmp_folder = '/home/kronos/GPFS-1/tmp'
 app = Flask(__name__,template_folder='/home/kronos/GPFS-1/Templates')
 
 # clear tmp directory
-dir = '/home/kronos/GPFS-1/tmp'
+'''dir = '/home/kronos/GPFS-1/tmp'
 for f in os.listdir(dir):
     os.remove(os.path.join(dir, f))
-
+'''
 # configure the app
 
 #secret key for session
@@ -44,19 +44,20 @@ class EditMarksForm(Form):
 # homepage where user can upload a pdf
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    if request.method == 'POST':
+        try:
+            file = request.files['file']
+            filename = str(random.randint(1000000000,9999999999))
+            file.save(os.path.join(tmp_folder, filename+'.pdf'))
+        except:
+            return render_template('index.html', error="File not valid")
+        
+        return redirect(url_for('identify_unit', filename=filename))
     return render_template('index.html')
 
 
-#upload function
-@app.route('/upload', methods=['GET', 'POST'])
-def upload():
-    form = FileForm()
-    if request.method == 'POST':
-        file = request.files['file']
-        filename = str(random.randint(1000000000,9999999999))
-        file.save(os.path.join(tmp_folder, filename+'.pdf'))
-        
-        return redirect(url_for('identify_unit', filename=filename))
+
+    
 
 #page that allows user to select which tasks are grade categories and which are unit categories
 @app.route('/identify_unit/<filename>', methods=['GET', 'POST'])
@@ -111,8 +112,10 @@ def identify_unit(filename):
         # Calculate the marks for each task
         marks.calculate_marks()
         marks.df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
-        # Redirect to the page for identifying the NHI's
+
+        # redirect to the page for identifying NHI tasks
         return redirect(url_for('identify_nhi', filename=filename))
+
     # Get the unique tasks from the dataframe
     tasks = df['Task'].unique()
     # Create a new form for selecting tasks
@@ -218,3 +221,4 @@ def delete_data(filename):
 app.run(debug=True,use_reloader=True)
               
 
+print 
