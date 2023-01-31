@@ -12,9 +12,8 @@ body{
 .drawing{
     width: 100vw;
     height: 100vh;
-    position: relative;
     display: block;
-    background-color: #3a3a3a;
+    background-color: #252525;
     transform: scale(4);
 }
 
@@ -328,10 +327,11 @@ body{
     setTimeout(function() {
       var template = document.getElementById("loading");
       template.style.opacity = 0;
-      template.style.overflow = "auto";
+      template.style.overflow = "none";
 
       setTimeout(function() {
         template.style.display = "none";
+        template.style.overflow = "overflow";
       }, 500);
       
     }, 3000);

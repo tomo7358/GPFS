@@ -1,10 +1,12 @@
 <html>
    <body>
-      <form action = "http://localhost:5000/upload" method = "POST" enctype = "multipart/form-data">
+      {% include 'Nav_bar.html' %}
+      <form method = "POST" enctype = "multipart/form-data">
 
 
          <input type = "file" name = "file" accept="application/pdf" />
          <input type = "submit"/>
-      </form>   
+      </form>
+      {% include 'footer.html' %}   
    </body>
 </html>
