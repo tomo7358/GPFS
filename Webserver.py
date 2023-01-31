@@ -1,5 +1,5 @@
 #import libraries for flask
-from flask import Flask, render_template, request,redirect,url_for
+from flask import Flask, render_template, request,redirect,url_for,session
 from wtforms import Form, FileField, validators, SubmitField
 from wtforms import SelectMultipleField
 from flask_debugtoolbar import DebugToolbarExtension 
@@ -10,14 +10,18 @@ import pandas as pd
 import SMBH
 import numpy as np
 import warnings
+import json
+from json import JSONEncoder
+
+#ignore future warnings to clean up output
 warnings.filterwarnings("ignore", category=FutureWarning)
 #define tmp foler path
 tmp_folder = '/home/kronos/GPFS-1/tmp'
 #create app and set template folder
 app = Flask(__name__,template_folder='/home/kronos/GPFS-1/Templates')
-
+'''
 # clear tmp directory
-'''dir = '/home/kronos/GPFS-1/tmp'
+dir = '/home/kronos/GPFS-1/tmp'
 for f in os.listdir(dir):
     os.remove(os.path.join(dir, f))
 '''
@@ -62,6 +66,10 @@ def index():
 #page that allows user to select which tasks are grade categories and which are unit categories
 @app.route('/identify_unit/<filename>', methods=['GET', 'POST'])
 def identify_unit(filename):
+    session.clear()
+    session['nhi'] = []
+    session['units'] = []
+    session['grade_groups'] = []
     filename=filename
     # Create the full path to the pdf file
     full_path = os.path.join(tmp_folder, filename+'.pdf')
@@ -89,6 +97,8 @@ def identify_unit(filename):
 
         current_unit = None
         current_grade_group = None
+        session["units"] = json.dumps(unit_categories)
+        session["grade_groups"] = json.dumps(grade_categories)
         # Iterate through the rows of the dataframe
         for index, row in df.iterrows():
             task = row["Task"]
@@ -103,7 +113,7 @@ def identify_unit(filename):
             # Update the dataframe with the current unit and grade group
             df.at[index, "Unit"] = current_unit
             df.at[index, "Grade Group"] = current_grade_group
-
+        
         # Fill in any missing values for the grade group
         df["Grade Group"] = df["Grade Group"].fillna(method='ffill')
         
@@ -112,7 +122,7 @@ def identify_unit(filename):
         # Calculate the marks for each task
         marks.calculate_marks()
         marks.df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
-
+        
         # redirect to the page for identifying NHI tasks
         return redirect(url_for('identify_nhi', filename=filename))
 
@@ -122,9 +132,9 @@ def identify_unit(filename):
     form = TaskForm()
     # Populate the form with the unique tasks
     form.tasks.choices = [(task, task) for task in tasks]
-
     # Render the template for identifying the unit
     return render_template('identify_unit.html', form=form)
+    
 
 
 
@@ -139,26 +149,27 @@ def identify_nhi(filename):
     nhi_list = []
     form = NHITaskForm()
     if request.method == 'POST':
-       
+
         # Get the selected tasks from the form
-        for task in form.tasks:
-            task_name = task.label.text
-            if request.form.get(task_name):
-                nhi_list.append(task_name)
+        nhi_list=request.form.getlist('NHIs')
         # Iterate through the rows of the dataframe and replace if task has a NaN in the calculated mark column and is not in the nhi list than replace the NaN with a PASS
         for index, row in df.iterrows():
-            if pd.isnull(row["Calculated Mark"]) and row["Task"] not in nhi_list:
+            if row["Task"] not in nhi_list and pd.isnull(row["Calculated Mark"]):
                 df.at[index, "Calculated Mark"] = "PASS"
-            elif pd.isnull(row["Calculated Mark"]) and row["Task"] in nhi_list:
+            if row["Task"] in nhi_list:
                 df.at[index, "Calculated Mark"] = "0"
             else:
                 pass
+                
         # Update the markbook object with the updated dataframe
         marks.df=df
         #calculate the final mark
         df,final_mark=marks.calculate_markbook()
+
         df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
+        
         return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
+
 
     # Get the tasks with NaN in the calculated marks column
     tasks_with_nan = df[pd.isnull(df["Calculated Mark"])]["Task"].unique()
@@ -173,12 +184,12 @@ def edit_marks(filename,final_mark):
     # Save a copy of the original dataframe in case the user resets the form
     if not os.path.exists(tmp_folder + '/' + filename +'-o'+ '.csv'):
         df.to_csv(tmp_folder + '/' + filename +'-o'+ '.csv', index=False)
-
     # Create a new markbook object
     marks=SMBH.Markbook()
     #add dataframe to markbook object
     marks.df=df
     # Calculate the marks and final grade for markbook
+    print(df)
     df,final_mark=marks.calculate_markbook()
     if request.method == 'POST':
         if 'Reset' in request.form:
@@ -193,11 +204,12 @@ def edit_marks(filename,final_mark):
             for index, row in df.iterrows():
                 task = row["Task"]
                 unit = row["Unit"]
-                
-                calculated_mark = request.form[unit + '-' + task]
-                print(task, calculated_mark)
+                try:
+                    calculated_mark = request.form[unit + '-' + task]
+                except:
+                    calculated_mark=0
                 df.at[index, "Calculated Mark"] = calculated_mark
-            print(df)
+
             # Update the markbook object with the updated dataframe
             marks.df=df
             print("Updated dataframe")
@@ -209,7 +221,7 @@ def edit_marks(filename,final_mark):
             return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
         # Render the template with the current dataframe and final mark
 
-    return render_template("edit.html", df=df, final_mark=final_mark)
+    return render_template("edit.html", df=df, final_mark=final_mark,units=session['units'],grade_groups=session['grade_groups'])
 
 
 @app.route('/delete_data/<filename>', methods=['POST'])
@@ -219,6 +231,3 @@ def delete_data(filename):
 
 
 app.run(debug=True,use_reloader=True)
-              
-
-print 

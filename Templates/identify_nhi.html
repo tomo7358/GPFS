@@ -3,8 +3,15 @@
 <form action="" method="POST">
     <ul>
         {% for task in form.tasks %}
-            <li><input type="checkbox" name="{{ task.label.text }}" value="{{ task.label.text }}">{{ task.label.text }}</li>
-        {% endfor %}
+  <li><input type="checkbox" name="NHIs" value="{{ task.label.text }}">{{ task.label.text }}</li>
+{% endfor %}
     </ul>
-    <input type="submit" value="Submit">
+<input type="submit" value="Submit">
+
 </form>
+<ul>
+
+{% for key in request.form %}
+  <li>{{ key }}: {{ request.form[key] }}</li>
+{% endfor %}
+</ul>
