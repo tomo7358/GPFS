@@ -45,9 +45,11 @@ class Markbook():
         # Convert the 'Mark' and 'Out Of' columns to numeric values
         self.df['Mark'] = pd.to_numeric(self.df['Mark'], errors='coerce')
         self.df['Out Of'] = pd.to_numeric(self.df['Out Of'], errors='coerce')
+        for index, row in self.df.iterrows():
+            task = row["Task"]
+            task = task.rstrip()
+            self.df.at[index, "Task"] = task
 
-        # Drop the 'Class Average' column
-        self.df = self.df.drop(columns='Class Average')
 
         # Remove newline characters from the 'Task' column
         self.df['Task'] = self.df['Task'].str.replace('\n', ' ')
@@ -99,7 +101,6 @@ class Markbook():
         weighted_avg=None
         current_grade=[]
         current_weight = []
-
         #function that finds the grade group and unit for each task
         def identify_root_task(markbook):
             #find the first occurence of each grade group and unit and add them to a list
@@ -114,6 +115,7 @@ class Markbook():
                 elif task in markbook["Unit"].unique():
                     unit_categories.append(task)     
             return (grade_categories, unit_categories)
+        
         #function that checks if a task has been repeated and is a unit or grade category
         def check_repeat(markbook,grade_categories,unit_categories):
             #loop through each task
@@ -126,9 +128,21 @@ class Markbook():
 
         #call the function to find the grade group and unit for each task
         grade_categories, unit_categories = identify_root_task(markbook)
+        
+        #call the function to check if a task has been repeated and is a unit or grade category
         check_repeat(markbook,grade_categories,unit_categories)
-        #if the task is a grade category or unit set the calculated mark to NaN
-        markbook["Calculated Mark"] = markbook.apply(lambda row: np.nan if row["Task"] in grade_categories or row["Task"] in unit_categories else row["Calculated Mark"], axis=1)
+        #check to see if any units are blank meaning its just the unit in that unit
+        
+        for unit in markbook["Unit"].unique():
+            #if the unit is the only task in the unit, keep the unit mark
+            if markbook[markbook["Unit"] == unit].shape[0] == 1:
+                pass
+            else: 
+                #set the calculated mark of unit to NaN
+                try:
+                    markbook.loc[markbook[markbook["Unit"] == unit].index[0], "Calculated Mark"] = np.nan
+                except:
+                    pass
         #for loop that iterates through each grade group and unit
         for grade_group in markbook["Grade Group"].unique():
             current_grade = []
@@ -158,6 +172,8 @@ class Markbook():
                     #set current grade and weight to empty lists
                     current_grade = []
                     current_weight = []
+                
+
                 # if the weighted average is not none, set the calculated mark for the unit to the weighted average
                 if weighted_avg != None:
                     #for loop for each task in unit
@@ -168,25 +184,28 @@ class Markbook():
                             markbook.loc[(markbook["Task"] == task) & (markbook["Unit"] == unit), "Calculated Mark"] = weighted_avg
                     #set the weighted average to none     
                     weighted_avg = None
-            
+
+                
             #check if grade group is not []
             if grade_categories != []:
                 current_grade=[]
                 current_weight=[]
+
                 #loop through each unit in grade group
                 for unit in markbook[(markbook["Grade Group"] == grade_group)]["Unit"].unique():
+                    #check to make sure its assingned a unit
                     
-                    #check to make sure its assingned a unit 
-                    if unit == None:
+                    if unit == np.nan or unit == None or unit == pd.isnull==True:
                         continue
-                    elif unit == "Class":
-                        continue
-
                     else:
-                        if markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0] != "PASS" and pd.isnull(markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0]) == False:
-                            current_weight.append(int(markbook[(markbook["Unit"] == unit)]["Weight"].values[0]))
-                            current_grade.append(int(markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0]))
-                            
+                        
+                        try:
+                            #check if the unit is not a grade category or unit
+                            if markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0] != "PASS" and pd.isnull(markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0]) == False:
+                                current_weight.append(int(markbook[(markbook["Unit"] == unit)]["Weight"].values[0]))
+                                current_grade.append(int(markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0]))
+                        except:
+                            pass
                 #calculate the weighted average for the grade group
                 if pd.isnull(markbook[(markbook["Unit"] == unit)]["Calculated Mark"].values[0]) == False:      
                     #calculate the weighted average for the grade group

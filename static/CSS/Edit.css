@@ -33,10 +33,11 @@ form th, td {
     
 }
 form th {
-    background-color: rgba(49, 49, 49, 0.863);
+    background-color: #292929;
     color: white;
 
 }
+
 
 
 .Final_mark {
@@ -44,7 +45,7 @@ form th {
     font-weight: 100;
     font-size: 48px;
     text-align: center;
-    color: #44ff00;
+    color: #44ff0083;
     background-clip: text;
     margin-top: 20px;
 }
@@ -129,4 +130,9 @@ border: 2px solid transparent;
     form {
         width: 90%;
     }
+}
+
+.highlight {
+  background-color: #1eff00;
+  color: #1eff00;
 }
