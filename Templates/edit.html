@@ -39,13 +39,13 @@ function highlightRows() {
         cells[2].textContent = "";
 
     }
-      cells[0].style.backgroundColor = "#1672b9";
-      cells[1].style.backgroundColor = "#1672b9";
-      cells[2].style.backgroundColor = "#1672b9";
-      cells[3].style.backgroundColor = "#1672b9";
+      cells[0].style.backgroundColor = "#324CCE";
+      cells[1].style.backgroundColor = "#324CCE";
+      cells[2].style.backgroundColor = "#324CCE";
+      cells[3].style.backgroundColor = "#324CCE";
       const input = cells[3].querySelector("input");
       if (input) {
-        input.style.background = "#1672b9";
+        input.style.background = "#324CCE";
 
         input.disabled = true;
 }
@@ -90,28 +90,7 @@ document.addEventListener("DOMContentLoaded", highlightRows);
        </div>
     </form>  
     {% include 'footer.html' %}
-    <script>
-    const element = document.querySelector("#fixed-div");
-const stopPoint = 670; // the point at which the element should stop moving with scroll
 
-window.addEventListener("scroll", () => {
-  let scrollY = window.scrollY;
-  if (scrollY >= stopPoint) {
-    element.style.position = "relative";
-    element.style.backgroundColor = "transparent";
-  } else {
-    element.style.position = "fixed";
-    element.style.margin = "0 auto";
-    element.style.marginbottom = "25px";
-    element.style.left = "50%";
-    element.style.transform = "translateX(-50%)";
-    element.style.backgroundColor = "rgb(35, 35, 35)";
-    element.style.width="100%"
-    element.style.padding = "10px";
-    element.style.bottom = "0px";
-        
-  }
-});    </script>
 
 
   

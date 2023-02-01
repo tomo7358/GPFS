@@ -45,19 +45,23 @@ class NHITaskForm(Form):
 class EditMarksForm(Form):
     regenerate_marks = SubmitField("Regenerate Marks")
 
-# homepage where user can upload a pdf
-@app.route('/', methods=['GET', 'POST'])
-def index():
+#home page
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+# upload where user can upload a pdf
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
     if request.method == 'POST':
-        try:
-            file = request.files['file']
-            filename = str(random.randint(1000000000,9999999999))
-            file.save(os.path.join(tmp_folder, filename+'.pdf'))
-        except:
-            return render_template('index.html', error="File not valid")
+
+        file = request.files['file']
+        filename = str(random.randint(1000000000,9999999999))
+        file.save(os.path.join(tmp_folder, filename+'.pdf'))
+
         
         return redirect(url_for('identify_unit', filename=filename))
-    return render_template('index.html')
+    return render_template('upload.html')
 
 
 
