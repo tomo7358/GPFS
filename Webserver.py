@@ -92,13 +92,10 @@ def identify_unit(filename):
         grade_categories=[]
         unit_categories=[]
         # Get the selected tasks from the form
-        for task in form.tasks:
-            task_name = task.label.text
-            if request.form.get(task_name + '_unit'):
-                unit_categories.append(task_name)
-            if request.form.get(task_name + '_grade'):
-                grade_categories.append(task_name)
-
+        unit_categories = request.form.getlist("unit_categories")
+        grade_categories = request.form.getlist("grade_categories")
+        print(unit_categories)
+        print(grade_categories)
         current_unit = None
         current_grade_group = None
         session["units"] = json.dumps(unit_categories)

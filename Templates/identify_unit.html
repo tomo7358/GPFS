@@ -1,28 +1,84 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/Identify_unit.css') }}">
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  crossorigin="anonymous"></script>
+
 {% include 'Nav_bar.html' %}
 {% include 'loading.html' %}
-<form method="post">
-    <table>
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Unit</th>
-          <th>Grade Group</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for task in form.tasks %}
-        <tr>
-          <td>{{ task.label.text }}</td>
-          <td>
-            <input type="checkbox" name="{{ task.label.text }}_unit" value="unit">
-          </td>
-          <td>
-            <input type="checkbox" name="{{ task.label.text }}_grade" value="grade">
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <input type="submit" value="Submit">
-  </form>
+<form method="post" id="NHi_form">
+  <table>
+    <thead>
+      <tr>
+        <th>Task</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in form.tasks %}
+      <tr>
+        <td id="{{ task.label.text }}">{{ task.label.text }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <input type="submit" value="Submit">
+
+</form>
+
+  <script type="text/javascript">
+    const table = document.querySelector('tbody');
+  
+    table.addEventListener('click', (e) => {
+      let target = e.target;
+      let count = target.dataset.count || 0;
+      count++;
+  
+      if (count === 1) {
+        target.style.background = '#2f8f0c';
+      } else if (count === 2) {
+        target.style.background = '#324CCE';
+      } else if (count === 3) {
+        target.style.background = '#292929';
+        count = 0;
+      }
+  
+      target.dataset.count = count;
+    });
+  </script>
+
+<script>
+  const url = window.location.href;
+  const filename = url.substring(url.lastIndexOf("/") + 1);
+  console.log(filename);
+  const form = new FormData();
+  const tasks = document.querySelectorAll("td");
+
+  let unit_categories = [];
+  let grade_categories = [];
+
+  tasks.forEach((task) => {
+    task.addEventListener("click", function () {
+      if (unit_categories.includes(this.id)) {
+        if (grade_categories.includes(this.id)) {
+          this.style.backgroundColor = "#292929";
+          grade_categories = grade_categories.filter((name) => name !== this.id);
+          unit_categories = unit_categories.filter((name) => name !== this.id);
+        } else {
+          this.style.backgroundColor = "#324CCE";
+          grade_categories.push(this.id);
+          unit_categories = unit_categories.filter((name) => name !== this.id);
+        }
+      } else {
+        this.style.backgroundColor = "#2f8f0c";
+        unit_categories.push(this.id);
+        grade_categories = grade_categories.filter((name) => name !== this.id);
+      }
+    FormData.append("unit_categories", unit_categories);
+    FormData.append("grade_categories", grade_categories);
+    addEventListener("submit", (e) => {
+      sendData({ test: 'ok' });
+});
+})});
+
+</script>
   {% include 'footer.html' %}

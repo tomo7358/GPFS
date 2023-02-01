@@ -36,3 +36,27 @@
       .file-upload-input {
         display: none;
       }
+
+      .button {
+        font-family:"Lora", serif;
+        background-image: linear-gradient(to right,#11ac33,rgb(41, 228, 56),  #81da61  100%);
+        margin: 5px;
+        padding: 10px 50px;
+        height: 45px;
+        width: auto;
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: rgb(65, 65, 65);            
+        box-shadow: 0 0 20px rgb(61, 61, 61);
+        border-radius: 48px;
+        display: inline-block;
+        border-color: transparent;
+      }
+
+      .button:hover {
+        background-position: right center; /* change the direction of the change here */
+        box-shadow: 0 0 20px rgb(0, 255, 13);
+        text-decoration: none;
+      }

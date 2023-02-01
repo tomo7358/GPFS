@@ -137,7 +137,8 @@ class Markbook():
             #if the unit is the only task in the unit, keep the unit mark
             if markbook[markbook["Unit"] == unit].shape[0] == 1:
                 pass
-            else: 
+            else:
+ 
                 #set the calculated mark of unit to NaN
                 try:
                     markbook.loc[markbook[markbook["Unit"] == unit].index[0], "Calculated Mark"] = np.nan
