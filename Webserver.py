@@ -92,10 +92,8 @@ def identify_unit(filename):
         grade_categories=[]
         unit_categories=[]
         # Get the selected tasks from the form
-        unit_categories = request.form.getlist("unit_categories")
-        grade_categories = request.form.getlist("grade_categories")
-        print(unit_categories)
-        print(grade_categories)
+        unit_categories = request.form.get("units").split(",")
+        grade_categories = request.form.get("grade_groups").split(",")
         current_unit = None
         current_grade_group = None
         session["units"] = json.dumps(unit_categories)
@@ -107,10 +105,12 @@ def identify_unit(filename):
             if task in grade_categories:
                 current_grade_group = task
                 current_unit = None
+
             # If the task is a unit category, update the current unit
             elif task in unit_categories:
                 current_unit = task
                 current_grade_group = None
+                print(task)
             # Update the dataframe with the current unit and grade group
             df.at[index, "Unit"] = current_unit
             df.at[index, "Grade Group"] = current_grade_group
@@ -121,6 +121,7 @@ def identify_unit(filename):
         # Update the markbook object with the updated dataframe
         marks.df=df
         # Calculate the marks for each task
+        print(df)
         marks.calculate_marks()
         marks.df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
         
@@ -128,7 +129,7 @@ def identify_unit(filename):
         return redirect(url_for('identify_nhi', filename=filename))
 
     # Get the unique tasks from the dataframe
-    tasks = df['Task'].unique()
+    tasks = df['Task']
     # Create a new form for selecting tasks
     form = TaskForm()
     # Populate the form with the unique tasks
@@ -190,7 +191,6 @@ def edit_marks(filename,final_mark):
     #add dataframe to markbook object
     marks.df=df
     # Calculate the marks and final grade for markbook
-    print(df)
     df,final_mark=marks.calculate_markbook()
     if request.method == 'POST':
         if 'Reset' in request.form:
@@ -230,5 +230,8 @@ def delete_data(filename):
     # code to delete the data
     return redirect(url_for("/"))
 
+@app.route('/donate', methods=['GET', 'POST'])
+def donate():
+    return(render_template("Donate.html"))
 
 app.run(debug=True,use_reloader=True)
