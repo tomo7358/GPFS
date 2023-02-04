@@ -2,23 +2,19 @@
 <html>
   <head>
     <style>
-body{
-  margin: 0;
-  overflow: auto;
-  margin: auto;
-  
-}
+
+
+
 
 .drawing{
     width: 100vw;
-    height: 100vh;
+    height: 80vh;
     display: block;
     background-color: #252525;
     transform: scale(4);
+    align-items: center;
+    justify-content: center;
 }
-
-
-
 
 /* -- Loading thingy --*/
 .loading-dot {
@@ -324,6 +320,7 @@ body{
     <div class="loading-dot"></div>
   </div>
   <script>
+    
     setTimeout(function() {
       var template = document.getElementById("loading");
       template.style.opacity = 0;
@@ -333,7 +330,6 @@ body{
         template.style.display = "none";
         template.style.overflow = "overflow";
       }, 500);
-      
     }, 3000);
   </script>
   </body>

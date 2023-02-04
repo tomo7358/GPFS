@@ -117,14 +117,17 @@ class Markbook():
             return (grade_categories, unit_categories)
         
         #function that checks if a task has been repeated and is a unit or grade category
-        def check_repeat(markbook,grade_categories,unit_categories):
-            #loop through each task
-            for task in markbook["Task"].unique():
-                #check if the task is a grade category or unit
+        def check_repeat(markbook, grade_categories, unit_categories):
+            first_item = True
+            for index, row in markbook.iterrows():
+                task = row["Task"]
                 if task in grade_categories or task in unit_categories:
-                     if markbook[markbook["Task"] == task].shape[0] > 1:
-                        markbook.loc[markbook[markbook["Task"] == task].index[0], "Task"] = task + "."
-            return(markbook)
+                    if markbook[markbook["Task"] == task].shape[0] > 1:
+                        if first_item:
+                            first_item = False
+                        else:
+                            markbook.at[index, "Task"] = task + "."
+            return markbook
 
         #call the function to find the grade group and unit for each task
         grade_categories, unit_categories = identify_root_task(markbook)

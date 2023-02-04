@@ -27,16 +27,28 @@ nav ul {
 nav ul li {
     display: inline-block;
     justify-content: left;
-    padding: 5px 7px 3px 7px;
+    padding: 10px 7px 3px 10px;
     border-radius: 7px;
 }
 
-nav ul li a {
+nav ul li a,nav ul li h1 {
     text-decoration: none;
     color: #ffffff;
     padding: 8px 30px;
     transition: all .3s ease;
     font-family: "Lora", serif;
+    font-size: 18;
+    
+}
+nav ul li h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #FFF;
+    padding: 4px 35px;
+    transition: all .3s ease;
+    font-family: "Lora", serif;
+    font-size: 18;
+
     
 }
 
@@ -44,6 +56,7 @@ nav ul li a:hover,
 nav ul li a.active {
     color: #FFF;
     border-radius: 12px;
+
 
 }
 .Nav-li:hover{
@@ -87,7 +100,7 @@ nav ul li a.active {
 }
 
 .link i {
-    padding-left: 7px;
+    padding-left: 10px;
 }
 
 .link:hover {
@@ -110,9 +123,10 @@ nav ul li a.active {
     box-shadow: 1px 1px 10px rgb(87, 255, 26);
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 940px) {
     nav {
         border-bottom: 1px solid #455468;
+        transition: all .3s ease;
     }
 
     nav ul {
@@ -127,13 +141,14 @@ nav ul li a.active {
         margin-top: 71px;
     }
 
+
     nav ul li {
         display: block;
         padding: 10px 15px;
 
     }
 
-    nav ul li a {
+    nav ul li a,nav ul li h1 {
         display: block;
         padding: 10px 0;
     }

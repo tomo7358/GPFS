@@ -5,6 +5,7 @@ form table {
     border-collapse: collapse;
     width: 100%;      
     margin-bottom: 4rem;  
+    height: 80vh;
 }
 form th, td {
     border: 1px solid rgb(0, 0, 0);
@@ -21,6 +22,9 @@ form th {
     background-color: #292929;
     color: white;
 
+}
+form tr {
+    margin: auto;
 }
 
 
@@ -42,7 +46,7 @@ color: #242424;
 
 
 
-@media screen and (max-width: 980px) {
+@media (max-width: 980px) {
 
     form {
         width: 90%;

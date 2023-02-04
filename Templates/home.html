@@ -4,11 +4,12 @@
         <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet"> 
         <link rel="stylesheet" href="{{ url_for('static', filename='CSS/Home.css') }}">
     </head>
+    {% include 'Nav_bar.html' %}
    <body>
-      {% include 'Nav_bar.html' %}
+     
     <div class="body">
       <H1>Being a Student made easy</H1>
-      <H2>View and Edit you marks with ease with our free tool</H2>
+      <H2>View and Edit your marks with ease with our free tool</H2>
       <a class="Upload" href="{{ url_for('upload') }}" >Upload Marks 📚</a>
 
     </div>

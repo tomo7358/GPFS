@@ -2,6 +2,27 @@
 <html>
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/Nav.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/Donate.css') }}">
+    <div id="donation-form">
+    <div class="donation-container" >
+        <h1>Support the Development Team</h1>
+        <p>This website is created and maintained by a one person development team. Your support will help us expand its features and improve the user experience.</p>
+        <div class="close-button">X</div>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="cmd" value="_donations">
+            <input type="hidden" name="business" value="you@youremail.com">
+            <input type="hidden" name="item_name" value="Donation for website expansion">
+            <input type="hidden" name="currency_code" value="USD">
+            <label for="amount">Enter amount:</label>
+            <input type="text" name="amount" id="amount" required>
+            
+            <input type="submit" value="Donate">
+          </form>
+          
+      </div>
+    </div>
+
+
 
 <nav>
     <div class="logo"><a href="{{ url_for('home')}}" >Student Pro Tools</a></div>
@@ -12,11 +33,32 @@
     <ul>
         <li class="Nav-li"><a href="{{ url_for('home')}}">Home</a></li>
         <li class="Nav-li"><a href="#">About</a></li>
-        <li class="Nav-li"><a href="#">Donate</a></li>
+        <li id="donate-button" class="Nav-li"><a>Donate</a></li>
         <li class="upload-marks"><a href="{{ url_for('upload')}}">Upload Marks</a></li>
     </ul>
 </nav>
+<script>
+const donateButton = document.getElementById("donate-button");
+const donationForm = document.getElementById("donation-form");
+const body = document.body;
+const closeButton = document.querySelector('.close-button');
+donationForm.classList.add("hide");
 
+donateButton.addEventListener("click", function() {
+    body.classList.add("blur");
+    donationForm.classList.add("show");
+    donationForm.style.blur = "0px";
+    donationForm.classList.remove("hide");
+  
+});
+closeButton.addEventListener('click', function() {
+    body.classList.remove("blur");
+    donationForm.classList.add("hide");
+    donationForm.classList.remove("show");
+});
+
+
+</script>
 
   
   

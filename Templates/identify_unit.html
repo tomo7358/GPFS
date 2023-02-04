@@ -49,8 +49,7 @@
 <script>
   const url = window.location.href;
   const filename = url.substring(url.lastIndexOf("/") + 1);
-  console.log(filename);
-  const form = new FormData();
+  const form = document.querySelector("#NHi_form");
   const tasks = document.querySelectorAll("td");
 
   let unit_categories = [];
@@ -64,7 +63,7 @@
           grade_categories = grade_categories.filter((name) => name !== this.id);
           unit_categories = unit_categories.filter((name) => name !== this.id);
         } else {
-          this.style.backgroundColor = "#324CCE";
+          this.style.backgroundColor = "#2f8f0c";
           grade_categories.push(this.id);
           unit_categories = unit_categories.filter((name) => name !== this.id);
         }
@@ -73,12 +72,25 @@
         unit_categories.push(this.id);
         grade_categories = grade_categories.filter((name) => name !== this.id);
       }
-    FormData.append("unit_categories", unit_categories);
-    FormData.append("grade_categories", grade_categories);
-    addEventListener("submit", (e) => {
-      sendData({ test: 'ok' });
-});
-})});
+    });
+  });
 
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const unitsInput = document.createElement("input");
+    unitsInput.type = "hidden";
+    unitsInput.name = "units";
+    unitsInput.value = unit_categories.join(",");
+    form.appendChild(unitsInput);
+
+    const gradeGroupsInput = document.createElement("input");
+    gradeGroupsInput.type = "hidden";
+    gradeGroupsInput.name = "grade_groups";
+    gradeGroupsInput.value = grade_categories.join(",");
+    form.appendChild(gradeGroupsInput);
+
+    form.submit();
+  });
 </script>
+
   {% include 'footer.html' %}
