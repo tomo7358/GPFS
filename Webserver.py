@@ -152,9 +152,8 @@ def identify_nhi(filename):
     form = NHITaskForm()
     if request.method == 'POST':
 
-        # Get the selected tasks from the form
-        nhi_list=request.form.getlist('NHIs')
-        # Iterate through the rows of the dataframe and replace if task has a NaN in the calculated mark column and is not in the nhi list than replace the NaN with a PASS
+        nhi_list=request.form.get("NHIs").split(",")
+
         for index, row in df.iterrows():
             if row["Task"] not in nhi_list and pd.isnull(row["Calculated Mark"]):
                 df.at[index, "Calculated Mark"] = "PASS"
@@ -169,9 +168,15 @@ def identify_nhi(filename):
         df,final_mark=marks.calculate_markbook()
 
         df.to_csv(tmp_folder + '/' + filename + '.csv', index=False)
-        
+        # redirect to the page for editing marks
+        return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
+    
+    #if there are no nhi tasks then redirect to the edit marks page
+    if len(df[pd.isnull(df["Calculated Mark"])]["Task"].unique())==0:
+        final_mark=0
         return redirect(url_for('edit_marks', filename=filename,final_mark=final_mark))
 
+        
 
     # Get the tasks with NaN in the calculated marks column
     tasks_with_nan = df[pd.isnull(df["Calculated Mark"])]["Task"].unique()

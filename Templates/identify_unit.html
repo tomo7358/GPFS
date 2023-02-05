@@ -25,28 +25,7 @@
 
 </form>
 
-  <script type="text/javascript">
-    const table = document.querySelector('tbody');
-  
-    table.addEventListener('click', (e) => {
-      let target = e.target;
-      let count = target.dataset.count || 0;
-      count++;
-  
-      if (count === 1) {
-        target.style.background = '#2f8f0c';
-      } else if (count === 2) {
-        target.style.background = '#324CCE';
-      } else if (count === 3) {
-        target.style.background = '#292929';
-        count = 0;
-      }
-  
-      target.dataset.count = count;
-    });
-  </script>
-
-<script>
+<script type="text/javascript">
   const url = window.location.href;
   const filename = url.substring(url.lastIndexOf("/") + 1);
   const form = document.querySelector("#NHi_form");
@@ -55,25 +34,32 @@
   let unit_categories = [];
   let grade_categories = [];
 
-  tasks.forEach((task) => {
-    task.addEventListener("click", function () {
-      if (unit_categories.includes(this.id)) {
-        if (grade_categories.includes(this.id)) {
-          this.style.backgroundColor = "#292929";
-          grade_categories = grade_categories.filter((name) => name !== this.id);
-          unit_categories = unit_categories.filter((name) => name !== this.id);
-        } else {
-          this.style.backgroundColor = "#2f8f0c";
-          grade_categories.push(this.id);
-          unit_categories = unit_categories.filter((name) => name !== this.id);
-        }
-      } else {
-        this.style.backgroundColor = "#2f8f0c";
-        unit_categories.push(this.id);
-        grade_categories = grade_categories.filter((name) => name !== this.id);
+    const table = document.querySelector('tbody');
+  
+    table.addEventListener('click', (e) => {
+      let target = e.target;
+      let count = target.dataset.count || 0;
+      count++;
+      console.log(unit_categories);
+      console.log(grade_categories);
+  
+      if (count === 1) {
+        target.style.background = '#2f8f0c';
+        unit_categories.push(target.id);
+        grade_categories = grade_categories.filter((name) => name !== target.id);
+      } else if (count === 2) {
+        target.style.background = '#324CCE';
+        grade_categories.push(target.id);
+        unit_categories = unit_categories.filter((name) => name !== target.id);
+      } else if (count === 3) {
+        target.style.background = '#292929';
+        grade_categories = grade_categories.filter((name) => name !== target.id);
+        unit_categories = unit_categories.filter((name) => name !== target.id);
+        count = 0;
       }
+  
+      target.dataset.count = count;
     });
-  });
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();

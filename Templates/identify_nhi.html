@@ -1,17 +1,73 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/Identify_NHI.css') }}">
+
+
+{% include 'Nav_bar.html' %}
+{% include 'loading.html' %}
 <h3>Identify NHI's</h3>
 
-<form action="" method="POST">
-    <ul>
-        {% for task in form.tasks %}
-  <li><input type="checkbox" name="NHIs" value="{{ task.label.text }}">{{ task.label.text }}</li>
-{% endfor %}
-    </ul>
-<input type="submit" value="Submit">
+
+
+<form method="post" id="NHi_form">
+  <table>
+    <thead>
+      <tr>
+        <th>Task</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in form.tasks %}
+      <tr>
+        <td id="{{ task.label.text }}">{{ task.label.text }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <input type="submit" value="Submit">
 
 </form>
-<ul>
+{% include 'footer.html' %}
+<script type="text/javascript">
+  const url = window.location.href;
+  const filename = url.substring(url.lastIndexOf("/") + 1);
+  const form = document.querySelector("#NHi_form");
+  const tasks = document.querySelectorAll("td");
 
-{% for key in request.form %}
-  <li>{{ key }}: {{ request.form[key] }}</li>
-{% endfor %}
-</ul>
+  let nhis = [];
+
+
+    const table = document.querySelector('tbody');
+  
+    table.addEventListener('click', (e) => {
+      let target = e.target;
+      let count = target.dataset.count || 0;
+      count++;
+      
+
+  
+      if (count === 1) {
+        target.style.background = '#ed4337';
+        nhis.push(target.id);
+        
+        
+      } else if (count === 2) {
+        target.style.background = '#292929';
+        nhis = nhis.filter((name) => name !== target.id);
+        
+        count = 0;
+      }
+  
+      target.dataset.count = count;
+      console.log(nhis);
+    });
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const nhiInput = document.createElement("input");
+    nhiInput.type = "hidden";
+    nhiInput.name = "NHIs";
+    nhiInput.value = nhis.join(",");
+    form.appendChild(nhiInput);
+
+    form.submit();
+  });
+</script>
