@@ -1,15 +1,25 @@
 
 
+body{
+    padding: 0;
+    margin: 0;
 
+}
 
 
 nav {
+    position: relative;
     margin: 0px auto;
     display: flex;
     justify-content: space-between;
-    padding: 15px 5%;
     align-items: center;
     background: #324CCE;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+
+    
+
     
 }
 

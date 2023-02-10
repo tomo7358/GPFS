@@ -14,6 +14,13 @@
     transform: scale(4);
     align-items: center;
     justify-content: center;
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
 }
 
 /* -- Loading thingy --*/
@@ -324,11 +331,9 @@
     setTimeout(function() {
       var template = document.getElementById("loading");
       template.style.opacity = 0;
-      template.style.overflow = "none";
 
       setTimeout(function() {
         template.style.display = "none";
-        template.style.overflow = "overflow";
       }, 500);
     }, 3000);
   </script>

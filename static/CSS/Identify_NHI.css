@@ -1,5 +1,8 @@
 body{
     background: linear-gradient(to bottom, #161616,#1b1b1b, #242424);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
   }
 form table {
     border-collapse: collapse;
@@ -54,4 +57,11 @@ color: #242424;
     form {
         width: 90%;
     }
+}
+
+.unit_exp{
+    scale: 0.3;
+    padding: 0 auto;
+    margin: 0;
+    
 }

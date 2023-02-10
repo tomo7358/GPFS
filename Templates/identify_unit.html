@@ -6,7 +6,11 @@
 
 {% include 'Nav_bar.html' %}
 {% include 'loading.html' %}
+<div style="margin: 0 auto;">
+<img class="unit_exp" src="/static/imgs/Units_explained.png" alt="">
+<br>
 <form method="post" id="NHi_form">
+    
   <table>
     <thead>
       <tr>
@@ -21,10 +25,10 @@
       {% endfor %}
     </tbody>
   </table>
-  <input type="submit" value="Submit">
+  <button action="Submit">Next</button>
 
 </form>
-
+</div>
 <script type="text/javascript">
   const url = window.location.href;
   const filename = url.substring(url.lastIndexOf("/") + 1);

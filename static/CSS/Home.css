@@ -77,13 +77,10 @@ h2{
     background: #0D262A; 
     padding: 5px; 
     border-radius: 24px; 
-    box-shadow:0 0 40px #3b39be;
     min-width: 950px;
+    animation: breathing 5s ease-in infinite;
 }
-.promo_box:hover{
-    box-shadow: 0 0 40px #4fc524;
-    transition: all .5s ease;
-}
+
     .Promo_2
     {
         display: flex;
@@ -151,4 +148,36 @@ h2{
   .text p {
     color : rgb(255, 255, 255);
     padding: 15px;
+  }
+
+  @keyframes breathing {
+    12% {
+      box-shadow: 0px 0px 0px 0px #3b39be;
+    }
+    24% {
+        box-shadow: 0px 0px 5px 1px #3b39be;
+    }
+    36% {
+        box-shadow: 0px 0px 10px 2px #3b39be;
+    }
+    48% {
+        box-shadow: 0px 0px 15px 3px #3b39be;
+    }
+    60% {
+        box-shadow: 0px 0px 20px 4px #3b39be;
+    }
+    72% {
+        box-shadow: 0px 0px 15px 3px #3b39be;
+    }
+    84% {
+        box-shadow: 0px 0px 10px 2px #3b39be;
+    }
+    96% {
+        box-shadow: 0px 0px 5px 1px #3b39be;
+    }
+    100% {
+        box-shadow: 0px 0px 0px 0px #3b39be;
+      }
+    
+
   }
