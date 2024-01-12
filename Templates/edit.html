@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/Edit.css') }}">
+    {% include 'Nav_bar.html' %}
+    <title>Edit Marks</title>
+   
+{% include 'loading.html' %}
+
+<script>
+var units = {{ units|tojson|safe }};
+var grade_groups = {{ grade_groups|tojson|safe }};
+console.log(units);
+console.log(grade_groups);
+function highlightRows() {
+  const rows = document.querySelectorAll("tr");
+  for (const row of rows) {
+    console.log(row);
+    const cells = row.querySelectorAll("td");
+    if (cells.length > 0 && units.includes(cells[0].textContent)) {
+      cells[0].style.backgroundColor = "#2f8f0c";
+      cells[1].style.backgroundColor = "#2f8f0c";
+      cells[2].style.backgroundColor = "#2f8f0c";
+      cells[3].style.backgroundColor = "#2f8f0c";
+      const input = cells[3].querySelector("input");
+      if (input) {
+        input.style.background = "#353535";
+
+        input.disabled = false;   
+    }
+    
+  }
+  if (cells.length > 0 && grade_groups.includes(cells[0].textContent)) {
+    if (cells[2].textContent == "nan") {
+        console.log(cells[2]);
+        cells[2].textContent = "";
+
+    }
+      cells[0].style.backgroundColor = "#324CCE";
+      cells[1].style.backgroundColor = "#324CCE";
+      cells[2].style.backgroundColor = "#324CCE";
+      cells[3].style.backgroundColor = "#324CCE";
+      const input = cells[3].querySelector("input");
+      if (input) {
+        input.style.background = "#324CCE";
+
+        input.disabled = true;
+}
+  
+}
+}
+}
+document.addEventListener("DOMContentLoaded", highlightRows);
+
+</script>
+
+</head>
+<body class="body">
+    <h1 class="Final_mark">Final Mark: {{ final_mark }}</h1>
+    <form method="POST" id="MarkBook">
+        <table id="marks-table">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Weight</th>
+                    <th>Unit</th>
+                    <th>Mark</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in df.iterrows() %}
+                    <tr>
+                        <td>{{row["Task"]}}</td>
+                        <td>{{row["Weight"]}}</td>
+                        <td>{{row["Unit"]}}</td>
+                        <td>
+                            <input type="text" name="{{row["Unit"]}}-{{row["Task"]}}" value="{{row["Calculated Mark"]}}" class="Mark_input">
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div id="fixed-div">
+        <input type="submit" value="Regenerate" class="button">
+        <input type="submit" value="Reset" name="Reset" class="button">
+        <input type="submit" value="Delete" name="Delete" class="button">
+       </div>
+    </form>  
+    {% include 'footer.html' %}
+
+
+
+  
+</body>
+</html>

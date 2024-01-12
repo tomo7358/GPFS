@@ -1,0 +1,90 @@
+body{
+    background: linear-gradient(to bottom, #161616,#1b1b1b, #242424);
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+  }
+form table {
+    border-collapse: collapse;
+    width: 100%;      
+    margin-bottom:0;  
+    height: 80vh;
+}
+form th, td {
+    border: 1px solid rgb(0, 0, 0);
+    padding: 8px;
+    text-align: center;
+    background-color: #292929;
+    color: white;
+    border-color: transparent;
+    font-family: "Lora", serif;
+    font-weight: 800;
+    
+}
+form th {
+    background-color: #292929;
+    color: white;
+
+}
+form tr {
+    margin: auto;
+}
+
+
+
+form {
+    text-align: center;
+    margin-top: 0;
+}
+
+    
+
+form {
+width: 60%; /* Set the width here */
+margin: 0 auto; /* Center the form */
+background-color: transparent;
+border-radius:48px;
+color: #242424;
+}
+
+
+
+
+@media (max-width: 980px) {
+
+    form {
+        width: 90%;
+    }
+}
+
+img.unit_exp {
+    margin: auto;
+    max-width: 40%;
+    max-height: 40%;
+ }
+
+.unit_exp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ }
+
+
+button{
+    border-radius: 48px;
+    border: 1px solid #2f8f0c;
+    padding: 10px 20px 10px 20px;
+    width: 5;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    font-family: "Lora", serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #2f8f0c;
+    border-color: transparent;
+}
+button:hover{
+    box-shadow: 0 0 10px #4ff314;
+    transition: all .5s ease;
+}

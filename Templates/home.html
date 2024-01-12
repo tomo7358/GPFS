@@ -1,0 +1,51 @@
+
+<html class="backround">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="{{ url_for('static', filename='CSS/Home.css') }}">
+    </head>
+    {% include 'Nav_bar.html' %}
+   <body>
+     
+    <div class="body">
+      <H1>Being a Student made easy</H1>
+      <H2>View and Edit your marks with ease with our free tool</H2>
+      <a class="Upload" href="{{ url_for('upload') }}" >Upload Marks 📚</a>
+
+    </div>
+    
+    <div class="Promo_1">
+        <div class="promo_box">
+          <img src="{{ url_for('static', filename='imgs/edit_promo.png') }}" alt="image" style="width: 50%; height: auto;">
+          <div class="text" style="width: 50%;">
+            <h3>Modern Design for the Modern Student</h3>
+            <p>Say goodbye to manual calculation of you final mark or wondering what you need on an assignment or final exam again. Using our state-of-the-art website, you'll have the power to easily see which assignments have the biggest impact on your grades and experiment with different scenarios to see the effect on your final mark. Experience a new level of control and knowledge with our modern design, made specifically for the modern student.</p>
+          </div>
+        </div>
+    </div>
+
+    <div class="Promo_2">
+        <div class="promo_box">
+          <img src="{{ url_for('static', filename='imgs/edit_promo.png') }}" alt="image" style="width: 50%; height: auto;">
+          <div class="text" style="width: 50%;">
+            <h3>Modern Design for the Modern Student</h3>
+            <p>Say goodbye to manual calculation of you final mark or wondering what you need on an assignment or final exam again. Using our state-of-the-art website, you'll have the power to easily see which assignments have the biggest impact on your grades and experiment with different scenarios to see the effect on your final mark. Experience a new level of control and knowledge with our modern design, made specifically for the modern student.</p>
+          </div>
+        </div>
+    </div>
+
+    <div class="Promo_3">
+        <div class="promo_box">
+          <img src="{{ url_for('static', filename='imgs/edit_promo.png') }}" alt="image" style="width: 50%; height: auto;">
+          <div class="text" style="width: 50%;">
+            <h3>Modern Design for the Modern Student</h3>
+            <p>Say goodbye to manual calculation of you final mark or wondering what you need on an assignment or final exam again. Using our state-of-the-art website, you'll have the power to easily see which assignments have the biggest impact on your grades and experiment with different scenarios to see the effect on your final mark. Experience a new level of control and knowledge with our modern design, made specifically for the modern student.</p>
+          </div>
+        </div>
+    </div>
+
+
+      
+      {% include 'footer.html' %}   
+   </body>
+</html>

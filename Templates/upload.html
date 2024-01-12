@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/Upload_marks.css') }}">
+<html>
+   <body class="body">
+      {% include 'Nav_bar.html' %}
+       
+    <div class="container">
+    <div class="file-upload">
+      <h1>Upload a PDF from Edsembli</h1>
+      <form id="file-upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" id="file-input" onchange="submitForm()" class="file-upload-input"  accept=".pdf" name="file">
+      </form>
+      <label for="file-input" class="file-upload-btn">Choose a file</label>
+    </div>
+    </div>
+    <script>
+
+  function submitForm() {
+    document.getElementById("file-upload-form").submit();
+  }
+
+
+    </script>
+    {% include 'footer.html' %}  
+  </body>
+</html>

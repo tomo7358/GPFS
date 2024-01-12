@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/Nav.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet"> 
+
+<nav>
+    <div class="logo"><a href="{{ url_for('home')}}" >Student Pro Tools</a></div>
+    <input type="checkbox" id="checkbox">
+    <label for="checkbox" id="icon">
+
+    </label>
+    <ul>
+        <li class="Nav-li"><a href="{{ url_for('home')}}">Home</a></li>
+        <li class="Nav-li"><a href="#">About</a></li>
+        <li id="donate-button" class="Nav-li"><a>Donate</a></li>
+        <li class="upload-marks"><a href="{{ url_for('upload')}}">Upload Marks</a></li>
+    </ul>
+</nav>
+
+  
+</html>
+

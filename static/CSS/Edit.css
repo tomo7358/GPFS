@@ -1,0 +1,136 @@
+#fixed-div {
+    position: relative;
+    bottom: 25px;
+    margin: 0 auto;
+    padding: 0;
+    margin-bottom: 25px;
+    background-color: linear-gradient(to bottom, #161616,#1b1b1b, #242424);
+
+
+    }
+
+
+.body {
+    background: linear-gradient(to bottom, #161616,#1b1b1b, #242424);
+    font-family:"Lora", serif bold;
+}
+
+form table {
+    border-collapse: collapse;
+    width: 100%;      
+    margin-bottom: 4rem;  
+}
+form th, td {
+    border: 1px solid rgb(0, 0, 0);
+    padding: 8px;
+    text-align: left;
+    background-color: #292929;
+    color: white;
+    border-color: transparent;
+    font-family: "Lora", serif;
+    font-weight: 800;
+    
+}
+form th {
+    background-color: #292929;
+    color: white;
+
+}
+
+
+
+.Final_mark {
+    font-family:"Lora", serif;
+    font-weight: 100;
+    font-size: 48px;
+    text-align: center;
+    color: #44ff0083;
+    background-clip: text;
+    margin-top: 20px;
+}
+form {
+    text-align: center;
+    margin-top: 20px;
+}
+.primary-color {
+    color: rgb(0, 0, 0);
+}
+.secondary-color {
+    color: darkblue;
+}
+
+         
+.button {
+        font-family:"Lora", serif;
+        background-image: linear-gradient(to right,#11ac33,rgb(41, 228, 56),  #81da61  100%);
+        margin: 5px;
+        padding: 10px 50px;
+        height: 45px;
+        width: auto;
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: rgb(65, 65, 65);            
+        box-shadow: 0 0 20px rgb(61, 61, 61);
+        border-radius: 48px;
+        display: inline-block;
+        border-color: transparent;
+      }
+
+      .button:hover {
+        background-position: right center; /* change the direction of the change here */
+        box-shadow: 0 0 20px rgb(0, 255, 13);
+        text-decoration: none;
+      }
+     
+
+
+  
+
+form {
+width: 60%; /* Set the width here */
+margin: 0 auto; /* Center the form */
+background-color: transparent;
+border-radius:48px;
+color: #242424;
+}
+.Mark_input {
+font-family:"Lora", serif bold;
+width: 100%;
+padding: 4px;
+border: 1px solid #ccc;
+border-radius: 2px;
+box-sizing: border-box;
+margin-top: 4px;
+margin-bottom: 4px;
+margin-right: 4px;
+resize: vertical;
+background-color: #353535;
+color: white;
+border-color: transparent;
+font-family: "Lora", serif;
+font-weight: 800;
+padding: 8px;
+background: linear-gradient(#353535, #353535);
+border-radius: 50em;
+border: 2px solid transparent;
+}
+.Mark_input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(0, 255, 13);
+    background: transparent;
+
+}
+
+@media screen and (max-width: 980px) {
+
+    form {
+        width: 90%;
+    }
+}
+
+.highlight {
+  background-color: #1eff00;
+  color: #1eff00;
+}
